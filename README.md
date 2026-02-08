@@ -1,2 +1,751 @@
-# V22
-V22
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Василий Груздев — Наследник темной звезды</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Quantico:wght@400;700&family=Share+Tech+Mono&family=Syne:wght@800&family=Exo+2:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #0ff0fc;
+            --neon-pink: #ff00ff;
+            --neon-purple: #9d00ff;
+            --neon-green: #00ff9d;
+            --neon-red: #ff003c;
+            --dark-bg: #0a0a16;
+            --glass-bg: rgba(10, 15, 30, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            height: 100%;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background-color: var(--dark-bg);
+            color: #e0e0ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(0, 255, 252, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 252, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            position: relative;
+        }
+
+        /* Простая анимированная сетка фона */
+        .cyber-grid {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+            background-image: 
+                linear-gradient(90deg, transparent 49.5%, var(--neon-blue) 49.5%, var(--neon-blue) 50.5%, transparent 50.5%),
+                linear-gradient(0deg, transparent 49.5%, var(--neon-blue) 49.5%, var(--neon-blue) 50.5%, transparent 50.5%);
+            background-size: 100px 100px;
+        }
+
+        /* Упрощенный заголовок без спецэффектов */
+        .cyber-header {
+            text-align: center;
+            padding: 25px 15px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .cyber-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: clamp(2.2rem, 8vw, 3.5rem);
+            color: var(--neon-blue);
+            letter-spacing: 1px;
+            line-height: 1;
+            margin-bottom: 10px;
+            position: relative;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 255, 252, 0.5);
+        }
+
+        /* Подзаголовок с минимальными эффектами */
+        .cyber-subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(1.2rem, 4vw, 1.6rem);
+            color: var(--neon-pink);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            padding: 5px 15px;
+            margin-top: 5px;
+            border: 1px solid var(--neon-pink);
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        /* Картинка с соотношением сторон 3:4 */
+        .fullscreen-cover {
+            width: 90%;
+            max-width: 600px; /* Уменьшил максимальную ширину для лучшего соотношения 3:4 */
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto 20px;
+            border: 3px solid var(--neon-blue);
+            border-radius: 10px;
+            box-shadow: 
+                0 0 30px rgba(0, 255, 252, 0.3),
+                inset 0 0 30px rgba(0, 255, 252, 0.1);
+            aspect-ratio: 3/4; /* Соотношение 3:4 */
+        }
+
+        /* Фолбэк для браузеров, не поддерживающих aspect-ratio */
+        .fullscreen-cover::before {
+            content: '';
+            display: block;
+            padding-top: 133.33%; /* 4/3 * 100% = 133.33% для соотношения 3:4 */
+        }
+
+        /* Скрываем псевдоэлемент, если поддерживается aspect-ratio */
+        @supports (aspect-ratio: 3/4) {
+            .fullscreen-cover::before {
+                display: none;
+            }
+        }
+
+        .fullscreen-cover img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.9) contrast(1.1);
+        }
+
+        /* Простой оверлей */
+        .cover-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(10, 10, 22, 0.2) 0%,
+                rgba(10, 10, 22, 0.1) 50%,
+                transparent 100%
+            );
+        }
+
+        /* Контейнер для кнопки */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 40px;
+            width: 100%;
+        }
+
+        /* Овальная кнопка в рамке */
+        .cyber-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px 45px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--neon-green);
+            border-radius: 50px; /* Овальная форма */
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 157, 0.4),
+                inset 0 0 15px rgba(0, 255, 157, 0.1);
+            text-align: center;
+            min-width: 280px;
+        }
+
+        .cyber-button:hover {
+            background: rgba(0, 255, 157, 0.2);
+            box-shadow: 
+                0 0 30px rgba(0, 255, 157, 0.6),
+                inset 0 0 20px rgba(0, 255, 157, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .cyber-button:active {
+            animation: greenPulse 0.3s ease;
+            transform: scale(0.98);
+        }
+
+        @keyframes greenPulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 20px rgba(0, 255, 157, 0.4),
+                    inset 0 0 15px rgba(0, 255, 157, 0.1);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 35px rgba(0, 255, 157, 0.8),
+                    inset 0 0 25px rgba(0, 255, 157, 0.3);
+            }
+        }
+
+        .cyber-button i {
+            color: var(--neon-green);
+        }
+
+        /* Контейнер контента */
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Упрощенный текстовый блок */
+        .cyber-terminal {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 252, 0.3);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+            position: relative;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--neon-green);
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(0, 255, 252, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .terminal-title {
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* Стиль для текста с сохранением форматирования */
+        .excerpt-text {
+            font-family: 'Quantico', sans-serif;
+            font-size: clamp(0.95rem, 3.8vw, 1.15rem);
+            line-height: 1.7;
+            color: #d0d0ff;
+            text-align: left;
+            position: relative;
+            padding: 15px;
+            background: rgba(0, 5, 15, 0.2);
+            border-left: 2px solid var(--neon-blue);
+            border-radius: 0 5px 5px 0;
+            white-space: pre-line;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+
+        /* Стили для диалогов и отступов */
+        .excerpt-text p {
+            margin-bottom: 1em;
+            line-height: 1.6;
+        }
+
+        .excerpt-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .excerpt-text::first-letter {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: var(--neon-blue);
+            float: left;
+            line-height: 0.8;
+            margin-right: 12px;
+            margin-top: 5px;
+            text-shadow: 0 0 8px var(--neon-blue);
+        }
+
+        .excerpt-source {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--neon-pink);
+            font-size: 0.9rem;
+            margin-top: 25px;
+            padding: 12px;
+            background: rgba(255, 0, 255, 0.1);
+            border: 1px dashed var(--neon-pink);
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        /* Упрощенный футер */
+        .cyber-footer {
+            text-align: center;
+            padding: 40px 20px 30px;
+            margin-top: 50px;
+            position: relative;
+        }
+
+        .cyber-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+        }
+
+        .copyright {
+            font-family: 'Orbitron', sans-serif;
+            color: #aaaaff;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            line-height: 1.6;
+            text-transform: uppercase;
+            margin-top: 20px;
+        }
+
+        /* Адаптивность для мобильных */
+        @media (max-width: 768px) {
+            .fullscreen-cover {
+                width: 95%;
+                max-width: 500px;
+                margin-bottom: 15px;
+            }
+            
+            .cyber-title {
+                font-size: clamp(1.8rem, 9vw, 2.5rem);
+            }
+            
+            .cyber-subtitle {
+                letter-spacing: 3px;
+                font-size: clamp(1rem, 4vw, 1.2rem);
+                padding: 4px 12px;
+            }
+            
+            .cyber-terminal {
+                padding: 20px 15px;
+                margin: 25px 0;
+            }
+            
+            .cyber-button {
+                padding: 16px 35px;
+                min-width: 260px;
+                font-size: 1.1rem;
+            }
+            
+            .content-container {
+                padding: 0 15px;
+            }
+            
+            .excerpt-text {
+                padding: 12px;
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+            
+            .excerpt-text::first-letter {
+                font-size: 2.8rem;
+                margin-right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cyber-header {
+                padding: 20px 10px 15px;
+            }
+            
+            .cyber-title {
+                font-size: 1.8rem;
+            }
+            
+            .cyber-subtitle {
+                letter-spacing: 2px;
+                font-size: 0.9rem;
+                padding: 3px 10px;
+            }
+            
+            .fullscreen-cover {
+                width: 95%;
+                max-width: 400px;
+            }
+            
+            .cyber-button {
+                padding: 14px 30px;
+                min-width: 240px;
+                font-size: 1rem;
+                letter-spacing: 2px;
+                gap: 8px;
+            }
+            
+            .button-container {
+                margin: 15px 0 30px;
+            }
+            
+            .excerpt-text {
+                font-size: 0.9rem;
+                line-height: 1.6;
+                white-space: normal;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .cyber-title {
+                font-size: 1.6rem;
+            }
+            
+            .cyber-subtitle {
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+            }
+            
+            .fullscreen-cover {
+                width: 95%;
+                max-width: 320px;
+            }
+            
+            .cyber-button {
+                padding: 12px 25px;
+                min-width: 220px;
+                font-size: 0.9rem;
+            }
+            
+            .excerpt-text {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Ландшафтная ориентация */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .fullscreen-cover {
+                width: 70%;
+                max-width: 400px;
+            }
+            
+            .cyber-header {
+                padding: 15px;
+            }
+            
+            .cyber-title {
+                font-size: 2.2rem;
+            }
+            
+            .excerpt-text {
+                max-height: 300px;
+                overflow-y: auto;
+            }
+            
+            .button-container {
+                margin: 15px 0 25px;
+            }
+        }
+
+        /* Отключение анимаций при необходимости */
+        @media (prefers-reduced-motion: reduce) {
+            .cyber-button {
+                animation: none !important;
+            }
+        }
+
+        /* Стили для скроллбара в тексте */
+        .excerpt-text::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .excerpt-text::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+
+        .excerpt-text::-webkit-scrollbar-thumb {
+            background: var(--neon-blue);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Простая сетка фона -->
+    <div class="cyber-grid"></div>
+    
+    <!-- Заголовок без спецэффектов -->
+    <header class="cyber-header">
+        <h1 class="cyber-title">ВАСИЛИЙ ГРУЗДЕВ</h1>
+        <div class="cyber-subtitle">НАСЛЕДНИК ТЕМНОЙ ЗВЕЗДЫ</div>
+    </header>
+    
+    <!-- Картинка с рамкой и соотношением 3:4 -->
+    <div class="fullscreen-cover">
+        <!-- ПРОСТО ПОЛОЖИТЕ ФАЙЛ img1.jpg В ПАПКУ С ЭТИМ HTML-ФАЙЛОМ -->
+        <img src="img1.jpg" alt="Обложка книги 'Наследник темной звезды'">
+        <div class="cover-overlay"></div>
+    </div>
+    
+    <!-- Кнопка под картинкой с отступом -->
+    <div class="button-container">
+        <a href="https://author.today/reader/426837/3953421" target="_blank" class="cyber-button">
+            <i class="fas fa-book-open"></i>
+            ЧИТАТЬ ЦИКЛ
+        </a>
+    </div>
+    
+    <!-- Основной контент -->
+    <div class="content-container">
+        <!-- Текстовый блок -->
+        <div class="cyber-terminal">
+            <div class="terminal-header">
+                <div class="terminal-title">ФРАГМЕНТ ТЕКСТА</div>
+                <div>ИЗ ЦИКЛА "НАСЛЕДНИК ТЕМНОЙ ЗВЕЗДЫ"</div>
+            </div>
+            
+            <div class="excerpt-text">
+— Ля! Ты ля, че Майерс творит! — подпрыгивая, кричала молодая, двадцать с хвостиком лет, девушка.
+
+Пиво из зажатой в её руке банки расплескалось вокруг, а точеная фигура в обтягивающем черном комбезе, расстёгнутом так, что сиськи чуть было не вываливались, невольно привлекала внимание. Алекс с трудом оторвал взгляд от этих подпрыгивающих «мячиков». На лицо тоже хороша — пухлые губки и курносый носик на загорелом лице, обрамлённом чёрным каре волос.
+
+
+— Да аккуратней ты, зараза! — возмутился мужчина с окрашенными в голубой цвет короткими волосами.
+
+Стряхивая капли с кожаных, одетых поверх силового костюма штанов, он погрозил проказнице кулаком.
+
+— Да ты видел? Видел? — восторженно орала девушка.
+
+— Всё я видел, че только так усираться…
+
+— Кхм… — кашлянул Роджер.
+
+И две с половиной пары глаз повернулись к ним.
+
+— О, Роджер вернулся! — резко развернувшись, мадам «приземлила» свое пиво на стол и, словно змея, хищно улыбаясь, «подползла» к Алексу.
+
+— А кто это у нас такой милашка! — сюсюкала она слегка заплетающимся языком.
+
+
+Убрав руки за спину, и слегка наклонившись, девушка заглядывала Алексу в глаза, еще больше "засвечивая" свое декольте.
+
+У парня по отношению к ней возникло двойственное желание: пнуть и [вырезано цензурой]… С одной стороны, деваха — самый сок, а с другой, а не пойти бы тебе, красавица, со своими шуточками? Впрочем, клин клином вышибают.
+
+
+— Ой, а кто это у нас такой сиськи вывалил? — передразнил девицу молодой человек.
+
+Та «подвисла» от такого заявления, но уже через секунду, поведя бедрами, с придыханием сообщила.
+
+— С тобой я спать не буду! — ткнула она в Алекса пальцем.
+            </div>
+            
+            <div class="excerpt-source">
+                ЦИКЛ "НАСЛЕДНИК ТЕМНОЙ ЗВЕЗДЫ" · ГЛАВА 3
+            </div>
+        </div>
+    </div>
+    
+    <!-- Футер -->
+    <footer class="cyber-footer">
+        <div class="copyright">
+            <div>© 2023 ВАСИЛИЙ ГРУЗДЕВ</div>
+            <div>ЦИКЛ "НАСЛЕДНИК ТЕМНОЙ ЗВЕЗДЫ"</div>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            'use strict';
+            
+            // Проверка, что DOM загружен
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+            
+            function init() {
+                console.log('Сайт загружается...');
+                
+                // Инициализация всех функций
+                setupImageHandling();
+                setupButtonHandling();
+                setupAdaptiveLayout();
+                setupScrollEffects();
+            }
+            
+            function setupImageHandling() {
+                const img = document.querySelector('.fullscreen-cover img');
+                if (!img) {
+                    console.warn('Элемент изображения не найден');
+                    return;
+                }
+                
+                // Проверка загрузки картинки
+                img.onerror = function() {
+                    console.warn('Картинка img1.jpg не найдена!');
+                    
+                    // Фолбэк с простым сообщением
+                    const cover = this.closest('.fullscreen-cover');
+                    if (!cover) return;
+                    
+                    this.style.display = 'none';
+                    const fallbackHTML = `
+                        <div style="
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background: linear-gradient(135deg, #0a0a16 0%, #1a1a2e 100%);
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            color: var(--neon-blue);
+                            font-family: 'Orbitron', sans-serif;
+                            text-align: center;
+                            padding: 20px;
+                            border-radius: 7px;
+                        ">
+                            <div style="font-size: 1.8rem; margin-bottom: 15px; text-shadow: 0 0 8px var(--neon-blue);">
+                                НАСЛЕДНИК ТЕМНОЙ ЗВЕЗДЫ
+                            </div>
+                            <div style="font-family: 'Share Tech Mono'; color: var(--neon-pink); font-size: 1rem; margin-bottom: 20px;">
+                                ВАСИЛИЙ ГРУЗДЕВ
+                            </div>
+                            <div style="font-size: 0.9rem; color: #aaaaff; border-top: 1px dashed var(--neon-blue); padding-top: 15px; width: 80%;">
+                                Для загрузки обложки поместите файл "img1.jpg" в папку с сайтом
+                            </div>
+                        </div>
+                    `;
+                    cover.insertAdjacentHTML('beforeend', fallbackHTML);
+                };
+                
+                img.onload = function() {
+                    console.log('✅ Картинка успешно загружена');
+                };
+            }
+            
+            function setupButtonHandling() {
+                const cyberButton = document.querySelector('.cyber-button');
+                if (!cyberButton) {
+                    console.warn('Кнопка не найдена');
+                    return;
+                }
+                
+                // Простая анимация кнопки при клике
+                cyberButton.addEventListener('click', function(e) {
+                    this.style.animation = 'greenPulse 0.3s ease';
+                    setTimeout(() => {
+                        this.style.animation = '';
+                    }, 300);
+                });
+                
+                // Оптимизация для тач-устройств
+                if ('ontouchstart' in window) {
+                    cyberButton.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.98)';
+                    });
+                    
+                    cyberButton.addEventListener('touchend', function() {
+                        this.style.transform = '';
+                    });
+                }
+            }
+            
+            function setupAdaptiveLayout() {
+                // Автопрокрутка для длинного текста на мобильных
+                function adjustTextScroll() {
+                    const excerptText = document.querySelector('.excerpt-text');
+                    if (!excerptText) return;
+                    
+                    const isMobile = window.innerWidth <= 768;
+                    const isLandscape = window.innerWidth > window.innerHeight;
+                    
+                    if (isMobile && isLandscape) {
+                        excerptText.style.maxHeight = '250px';
+                        excerptText.style.overflowY = 'auto';
+                    } else {
+                        excerptText.style.maxHeight = 'none';
+                        excerptText.style.overflowY = 'visible';
+                    }
+                }
+                
+                // Первоначальная настройка
+                adjustTextScroll();
+                
+                // Обработка изменения размера окна
+                let resizeTimeout;
+                window.addEventListener('resize', function() {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(function() {
+                        adjustTextScroll();
+                    }, 100);
+                });
+            }
+            
+            function setupScrollEffects() {
+                // Простой эффект параллакса для сетки
+                let lastScrollTop = 0;
+                let ticking = false;
+                
+                function updateParallax() {
+                    const cyberGrid = document.querySelector('.cyber-grid');
+                    if (!cyberGrid) return;
+                    
+                    const scrolled = window.pageYOffset;
+                    // Только если пользователь действительно прокручивает
+                    if (Math.abs(scrolled - lastScrollTop) > 1) {
+                        const rate = scrolled * -0.3;
+                        cyberGrid.style.transform = `translateY(${rate}px)`;
+                        lastScrollTop = scrolled;
+                    }
+                    ticking = false;
+                }
+                
+                window.addEventListener('scroll', function() {
+                    if (!ticking) {
+                        window.requestAnimationFrame(updateParallax);
+                        ticking = true;
+                    }
+                });
+                
+                // Предотвращение масштабирования при двойном тапе на iOS
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', function(event) {
+                    const now = Date.now();
+                    if (now - lastTouchEnd <= 300) {
+                        event.preventDefault();
+                    }
+                    lastTouchEnd = now;
+                }, { passive: false });
+            }
+            
+            console.log('Сайт инициализирован успешно');
+        })();
+    </script>
+</body>
+</html>
